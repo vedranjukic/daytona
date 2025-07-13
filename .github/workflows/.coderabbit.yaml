@@ -18,6 +18,58 @@ path_instructions:
     
   - path: "apps/api/src/sandbox/controllers/sandbox.controller.ts"
     instructions: "CRITICAL: Focus on setAutoDeleteInterval() accepting negative values, setAutostopInterval() accepting 0, parameter parsing preserving disabled values, and DTO validation not rejecting -1 or 0."
+    
+  # Any sandbox-related files
+  - path: "**/sandbox/**/*.ts"
+    instructions: "SANDBOX SECURITY: Check for autoDeleteInterval and autoStopInterval usage. Ensure -1 values never trigger auto-deletion, 0 values never trigger auto-stop. Verify proper validation and handling of disabled states."
+    
+  - path: "**/sandbox/**/*.js"
+    instructions: "SANDBOX SECURITY: Check for autoDeleteInterval and autoStopInterval usage. Ensure -1 values never trigger auto-deletion, 0 values never trigger auto-stop. Verify proper validation and handling of disabled states."
+
+  # Specific patterns that might affect sandbox lifecycle
+  - path: "**/*delete*.ts"
+    instructions: "DELETION SECURITY: If this file handles sandbox deletion, ensure autoDeleteInterval = -1 values are properly excluded from any deletion logic. Verify no accidental inclusion of disabled sandboxes."
+    
+  - path: "**/*stop*.ts"
+    instructions: "STOP SECURITY: If this file handles sandbox stopping, ensure autoStopInterval = 0 values are properly excluded from any auto-stop logic. Verify no accidental stopping of disabled sandboxes."
+    
+  - path: "**/*cron*.ts"
+    instructions: "CRON SECURITY: If this file contains scheduled tasks, verify proper handling of autoDeleteInterval and autoStopInterval. Ensure disabled values (-1, 0) are excluded from automated actions."
+    
+  - path: "**/*schedule*.ts"
+    instructions: "SCHEDULE SECURITY: If this file contains scheduled operations, verify proper handling of autoDeleteInterval and autoStopInterval. Ensure disabled values (-1, 0) are excluded from automated actions."
+
+  # Database and ORM files that might affect queries
+  - path: "**/*repository*.ts"
+    instructions: "DATABASE SECURITY: If this file contains sandbox queries, ensure MoreThanOrEqual(0) and Not(0) filters properly exclude disabled interval values. Verify no accidental inclusion of -1 or 0 in wrong contexts."
+    
+  - path: "**/*query*.ts"
+    instructions: "QUERY SECURITY: If this file contains sandbox database queries, ensure proper filtering of autoDeleteInterval and autoStopInterval. Verify disabled values are handled correctly."
+
+  # Validation and DTO files
+  - path: "**/*dto*.ts"
+    instructions: "VALIDATION SECURITY: If this DTO handles autoDeleteInterval or autoStopInterval, ensure validation accepts disabled values (-1 for delete, 0 for stop). Check for @Min, @IsPositive decorators that might reject disabled values."
+    
+  - path: "**/*validation*.ts"
+    instructions: "VALIDATION SECURITY: If this file validates autoDeleteInterval or autoStopInterval, ensure disabled values are accepted. Check validation logic doesn't accidentally reject -1 or 0 as invalid."
+
+  # Migration files that might affect database schema
+  - path: "**/migrations/**/*.ts"
+    instructions: "MIGRATION SECURITY: If this migration affects autoDeleteInterval or autoStopInterval columns, ensure database constraints allow disabled values (-1, 0). Verify default values are preserved."
+    
+  - path: "**/migrations/**/*.sql"
+    instructions: "MIGRATION SECURITY: If this migration affects autoDeleteInterval or autoStopInterval columns, ensure database constraints allow disabled values (-1, 0). Verify default values are preserved."
+
+  # Configuration files that might affect sandbox behavior
+  - path: "**/*config*.ts"
+    instructions: "CONFIG SECURITY: If this configuration affects sandbox lifecycle, ensure proper handling of disabled interval values. Verify no hardcoded assumptions that break disabled state logic."
+
+  # Test files (to ensure tests cover security scenarios)
+  - path: "**/sandbox/**/*.spec.ts"
+    instructions: "TEST SECURITY: Ensure tests cover autoDeleteInterval = -1 and autoStopInterval = 0 scenarios. Verify tests validate that disabled values never trigger automated actions."
+    
+  - path: "**/sandbox/**/*.test.ts"
+    instructions: "TEST SECURITY: Ensure tests cover autoDeleteInterval = -1 and autoStopInterval = 0 scenarios. Verify tests validate that disabled values never trigger automated actions."
 
 chat:
   auto_reply: true
@@ -25,7 +77,6 @@ chat:
 ignore:
   - "**/*.md"
   - "**/*.json"
-  - "**/test/**"
-  - "**/tests/**"
-  - "**/*.spec.ts"
-  - "**/*.test.ts"
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
