@@ -645,7 +645,7 @@ export class SandboxService {
 
     sandbox.pending = true
     //  if auto-delete interval is 0, delete the sandbox immediately
-    if (sandbox.autoDeleteInterval === 0) {
+    if (sandbox.autoDeleteInterval < 1) {
       sandbox.desiredState = SandboxDesiredState.DESTROYED
     } else {
       sandbox.desiredState = SandboxDesiredState.STOPPED
