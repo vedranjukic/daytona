@@ -3,8 +3,13 @@
 
 reviews:
   profile: assertive
-  request_changes: auto
   high_level_summary: true
+  path_filters:
+    - "!**/*.md"
+    - "!**/*.json"
+    - "!**/node_modules/**"
+    - "!**/dist/**"
+    - "!**/build/**"
 
 path_instructions:
   - path: "apps/api/src/sandbox/managers/sandbox.manager.ts"
@@ -73,10 +78,3 @@ path_instructions:
 
 chat:
   auto_reply: true
-
-ignore:
-  - "**/*.md"
-  - "**/*.json"
-  - "**/node_modules/**"
-  - "**/dist/**"
-  - "**/build/**"
