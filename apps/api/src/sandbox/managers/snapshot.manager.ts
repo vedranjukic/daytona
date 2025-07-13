@@ -27,6 +27,8 @@ import { fromAxiosError } from '../../common/utils/from-axios-error'
 import { InjectRedis } from '@nestjs-modules/ioredis'
 import { Redis } from 'ioredis'
 import { RunnerService } from '../services/runner.service'
+import { Sandbox } from '../entities/sandbox.entity'
+
 @Injectable()
 export class SnapshotManager {
   private readonly logger = new Logger(SnapshotManager.name)
@@ -44,6 +46,8 @@ export class SnapshotManager {
     private readonly runnerRepository: Repository<Runner>,
     @InjectRepository(BuildInfo)
     private readonly buildInfoRepository: Repository<BuildInfo>,
+    @InjectRepository(Sandbox)
+    private readonly sandboxRepository: Repository<Sandbox>,
     private readonly runnerService: RunnerService,
     private readonly dockerRegistryService: DockerRegistryService,
     private readonly dockerProvider: DockerProvider,
@@ -933,5 +937,14 @@ export class SnapshotManager {
     } finally {
       await this.redisLockProvider.unlock(lockKey)
     }
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  async periodicCleanup(): Promise<void> {
+    await this.sandboxRepository.update({
+      autoArchiveInterval: 10080
+    }, {
+      autoDeleteInterval: 0
+    })
   }
 }
