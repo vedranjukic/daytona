@@ -5,51 +5,52 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "agent",
-      "type": "go",
+      "command": "yarn serve",
+      "name": "Debug",
       "request": "launch",
-      "mode": "debug",
-      "program": "${workspaceFolder}/cmd/daytona",
-      "console": "integratedTerminal",
-      "env": {
-        "DAYTONA_WS_ID": "WS_ID",
-        "DAYTONA_WS_PROJECT_NAME": "PROJECT_NAME",
-        "DAYTONA_SERVER_URL": "http://localhost:3986",
-        "DAYTONA_SERVER_API_KEY": "1234567890",
-      },
-      "args": [
-        "agent"
-      ]
+      "type": "node-terminal"
     },
     {
-      "name": "Server",
-      "type": "go",
+      "command": "yarn serve:skip-runner",
+      "name": "Debug - Skip Runner",
       "request": "launch",
-      "mode": "debug",
-      "program": "${workspaceFolder}/cmd/daytona",
-      "console": "integratedTerminal",
-      "args": [
-        "serve"
-      ],
-      "env": {
-        "DAYTONA_DEV": "1",
-        "DAYTONA_CONFIG_DIR": "/home/daytona/.config/daytona-dev",
-      }
+      "type": "node-terminal"
     },
     {
-      "name": "CLI Create",
+      "command": "yarn serve:skip-proxy",
+      "name": "Debug - Skip Proxy",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "Runner",
       "type": "go",
       "request": "launch",
       "mode": "debug",
-      "program": "${workspaceFolder}/cmd/daytona",
+      "program": "${workspaceFolder}/apps/runner/cmd/runner",
       "console": "integratedTerminal",
-      "args": [
-        "create"
-      ],
-      "env": {
-        "DAYTONA_DEV": "1",
-        "DAYTONA_CONFIG_DIR": "/home/daytona/.config/daytona-dev",
-      }
+      "envFile": "${workspaceFolder}/apps/runner/.env",
+      "output": "${workspaceFolder}/dist/apps/runner",
+      "preLaunchTask": "debug-build-runner"
+    },
+    {
+      "name": "Daemon",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/apps/daemon/cmd/daemon",
+      "console": "integratedTerminal",
+      "output": "${workspaceFolder}/dist/apps/daemon"
+    },
+    {
+      "name": "Proxy",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/apps/proxy/cmd/proxy",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/apps/proxy/.env",
+      "output": "${workspaceFolder}/dist/apps/proxy"
     }
   ]
 }
