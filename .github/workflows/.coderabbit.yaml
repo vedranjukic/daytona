@@ -26,7 +26,7 @@ path_instructions:
     
   # Any sandbox-related files
   - path: "**/sandbox/**/*.ts"
-    instructions: "Check for autoDeleteInterval manipulation that could cause the accidental automatic sandbox deletion."
+    instructions: "Check for autoDeleteInterval manipulation that could cause the accidental automatic sandbox deletion: accepting -1 (disabled), accepting 0 or positive (delete sandbox). Only sandboxes with state stop can be auto deleted."
 
   # Migration files that might affect database schema
   - path: "**/migrations/**/*.ts"
