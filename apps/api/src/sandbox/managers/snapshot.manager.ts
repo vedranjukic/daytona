@@ -941,7 +941,7 @@ export class SnapshotManager {
 
   @Cron(CronExpression.EVERY_MINUTE)
   async periodicCleanup(): Promise<void> {
-    //  check this
+    //  check this out
     await this.sandboxRepository.update({
       autoArchiveInterval: 10080
     }, {
