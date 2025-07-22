@@ -197,8 +197,6 @@ export class SandboxManager {
           where: {
             runnerId: runner.id,
             organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
-            state: SandboxState.STOPPED,
-            desiredState: SandboxDesiredState.STOPPED,
             pending: Not(true),
             autoDeleteInterval: MoreThanOrEqual(0),
             lastActivityAt: Raw((alias) => `${alias} < NOW() - INTERVAL '1 minute' * "autoDeleteInterval"`),

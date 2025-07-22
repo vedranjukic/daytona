@@ -3,8 +3,13 @@
 
 reviews:
   profile: assertive
-  request_changes: auto
   high_level_summary: true
+  path_filters:
+    - "!**/*.md"
+    - "!**/*.json"
+    - "!**/node_modules/**"
+    - "!**/dist/**"
+    - "!**/build/**"
 
 path_instructions:
   - path: "apps/api/src/sandbox/managers/sandbox.manager.ts"
@@ -18,14 +23,14 @@ path_instructions:
     
   - path: "apps/api/src/sandbox/controllers/sandbox.controller.ts"
     instructions: "CRITICAL: Focus on setAutoDeleteInterval() accepting negative values, setAutostopInterval() accepting 0, parameter parsing preserving disabled values, and DTO validation not rejecting -1 or 0."
+    
+  # Any sandbox-related files
+  - path: "**/sandbox/**/*.ts"
+    instructions: "Check for autoDeleteInterval manipulation that could cause the accidental automatic sandbox deletion: accepting -1 (disabled), accepting 0 or positive (delete sandbox). Only sandboxes with state stop can be auto deleted."
 
+  # Migration files that might affect database schema
+  - path: "**/migrations/**/*.ts"
+    instructions: "MIGRATION SECURITY: If this migration affects autoDeleteInterval or autoStopInterval columns, ensure database constraints allow disabled values (-1, 0). Verify default values are preserved."
+    
 chat:
   auto_reply: true
-
-ignore:
-  - "**/*.md"
-  - "**/*.json"
-  - "**/test/**"
-  - "**/tests/**"
-  - "**/*.spec.ts"
-  - "**/*.test.ts"
